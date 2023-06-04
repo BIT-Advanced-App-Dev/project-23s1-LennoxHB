@@ -5,6 +5,41 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 1.8vw;
+  background-color: #1e2024;
+}
+
+.modal-form {
+  --bs-modal-bg: #1e2024;
+  color: #d8e0ed
+}
+
+input {
+  margin: 0;
+  font-size: 1.8vw;
+  background-color: #383c42;
+  color: #d8e0ed
+}
+
+button {
+  font-size: 1.8vw;
+  background-color: #2b2e33;
+  color: #d8e0ed;  
+}
+
+button:hover {
+  background-color: #383c42
+}
+
+li {
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: 5fr 8fr 1fr;
+  column-gap: 5px;
+}
+
+li div {
+  justify-self: end;
 }
 
 code {
