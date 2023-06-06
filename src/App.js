@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      {user?.uid ?
+      {user?.displayName ?
         <>
           <SimpleForm
             formName="Create Lobby"
