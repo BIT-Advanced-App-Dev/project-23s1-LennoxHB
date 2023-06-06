@@ -11,6 +11,7 @@ export default function SimpleForm(props) {
         <>
             <button onClick={() => toggle.activate()}>{formName}</button>
             <Modal className="modal-form" isOpen={toggle.get()} size='xl' >
+                <h2>{formName}</h2>
                 {inputs.inputList}
                 <ModalFooter>
                     <button onClick={() => toggle.activate()}>Cancel</button>

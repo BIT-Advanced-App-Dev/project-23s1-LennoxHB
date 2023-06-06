@@ -11,7 +11,8 @@ body {
 
 .modal-form {
   --bs-modal-bg: #1e2024;
-  color: #d8e0ed
+  color: #d8e0ed;
+  text-align: center;
 }
 
 input {
