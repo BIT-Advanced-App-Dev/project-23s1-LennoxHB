@@ -14,7 +14,7 @@ function App() {
             submitCallback={createLobby}
             inputData={[
               { field: 'name', text: 'Name', type: 'string' },
-              { field: 'password', text: 'Password', type: 'string', optional: true }
+              { field: 'password', text: 'Password (optional)', type: 'string' }
             ]} />
           <button onClick={() => logout()}>Sign Out</button>
         </>
