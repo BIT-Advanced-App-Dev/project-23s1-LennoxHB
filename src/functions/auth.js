@@ -24,12 +24,11 @@ export const useGetUser = () => {
 }
 
 export const register = async (req) => {
-    console.log(req)
-    // const { email, password, displayName } = req
-    // await createUserWithEmailAndPassword(auth, email, password)
-    // await updateProfile(auth.currentUser, { displayName: displayName })
-    // const userDoc = doc(firestore, "users", auth.currentUser.uid)
-    // await setDoc(userDoc, { displayName: displayName })
+    const { email, password, displayName } = req
+    await createUserWithEmailAndPassword(auth, email, password)
+    await updateProfile(auth.currentUser, { displayName: displayName })
+    const userDoc = doc(firestore, "users", auth.currentUser.uid)
+    await setDoc(userDoc, { displayName: displayName })
 }
 
 export const login = async (req) => {

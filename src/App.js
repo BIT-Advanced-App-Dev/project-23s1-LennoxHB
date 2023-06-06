@@ -13,8 +13,8 @@ function App() {
             formName="Create Lobby"
             submitCallback={createLobby}
             inputData={[
-              { name: 'Name', type: 'string' },
-              { name: 'Password', type: 'string', optional: true }
+              { field: 'name', text: 'Name', type: 'string' },
+              { field: 'password', text: 'Password', type: 'string', optional: true }
             ]} />
           <button onClick={() => logout()}>Sign Out</button>
         </>
@@ -24,16 +24,16 @@ function App() {
             formName="Login"
             submitCallback={login}
             inputData={[
-              { name: 'Name', type: 'string' },
-              { name: 'Password', type: 'string' }
+              { field: 'email', text: 'Email', type: 'string' },
+              { field: 'password', text: 'Password', type: 'password' }
             ]} />
           <SimpleForm
             formName="Register"
             submitCallback={register}
             inputData={[
-              { name: 'Display Name', type: 'string' },
-              { name: 'Email', type: 'string' },
-              { name: 'Password', type: 'string' }
+              { field: 'displayName', text: 'Display Name', type: 'string' },
+              { field: 'email', text: 'Email', type: 'string' },
+              { field: 'password', text: 'Password', type: 'password' }
             ]} />
         </>}
     </>

@@ -8,18 +8,17 @@ export const useGenerateInputs = (inputData) => {
     const initialValues = inputData.reduce((obj, item) => {
         return {
             ...obj,
-            [item.name]: null
+            [item.field]: null
         }
     }, {})
     const [values, setValues] = useState(initialValues)
     const inputList = inputData.map((input, index) => {
         return (
             <li key={index} >
-                <div>{input.name} {input.optional ? '(optional)' : ''}</div>
+                <div>{input.text[0].toUpperCase()}{input.text.slice(1)}</div>
                 <input
                     type={input.type}
-                    placeholder={input.name}
-                    name={input.name}
+                    name={input.field}
                     onChange={(event) => {
                         const { value, name } = event.target
                         setValues(values => ({
