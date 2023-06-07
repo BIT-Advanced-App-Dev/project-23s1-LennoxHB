@@ -42,11 +42,20 @@ button:hover {
   background-color: #383c42
 }
 
-li {
+.modal-form li {
   list-style-type: none;
   display: grid;
   grid-template-columns: 5fr 8fr 1fr;
   column-gap: 5px;
+}
+
+.errorHandler {
+  margin: 5px;
+  align-items: center;
+}
+.errorHandler .message {  
+  background-color: #570f0d;
+  color: #fcd5d4;
 }
 
 li div {
