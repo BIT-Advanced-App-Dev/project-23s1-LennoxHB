@@ -3,45 +3,25 @@ import { useEffect, useState } from "react"
 import { firestore } from '../firebase';
 
 export const getDocuments = async (query) => {
-    try {
-        return await getDocs(query)
-    } catch (error) {
-        console.log(error.message)
-    }
+    return await getDocs(query)
 }
 
 export const getDocument = async (query) => {
-    try {
-        return await getDoc(query)
-    } catch (error) {
-        console.log(error.message)
-    }
+    return await getDoc(query)
 }
 export const createDocument = async (ref, data) => {
-    try {
-        await setDoc(ref, data)
-    } catch (error) {
-        console.log(error.message)
-    }
+    await setDoc(ref, data)
 }
 
 export const deleteDocument = async (doc) => {
-    try {
-        await deleteDoc(doc)
-    } catch (error) {
-        console.log(error.message)
-    }
+    await deleteDoc(doc)
 }
 
 export const updateDocument = async (doc, data) => {
-    try {
-        await updateDoc(doc, data)
-    } catch (error) {
-        console.log(error.message)        
-    }
+    await updateDoc(doc, data)
 }
 
-export const useOnSnapshot = (ref) => {    
+export const useOnSnapshot = (ref) => {
     const [data, setData] = useState([])
     useEffect(() => {
         const unsub = onSnapshot(collection(firestore, ref), (shot) => {
@@ -50,6 +30,6 @@ export const useOnSnapshot = (ref) => {
             )))
         })
         return () => unsub()
-    }, [])    
+    }, [])
     return data
 }
