@@ -48,6 +48,11 @@ button:hover {
   grid-template-columns: 5fr 8fr 1fr;
   column-gap: 5px;
 }
+.modal-form li span {
+  display: grid;  
+  grid-template-columns: 9fr 1fr;
+  padding: 0.5vw
+}
 
 .errorHandler {
   margin: 5px;
