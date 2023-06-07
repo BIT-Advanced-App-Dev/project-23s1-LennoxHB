@@ -1,6 +1,8 @@
 import SimpleForm from './components/SimpleForm';
 import { createLobby } from './functions/game';
 import { login, register, logout, useGetUser } from './functions/auth';
+import List from './components/List';
+import LobbyItem from './components/LobbyItem';
 
 function App() {
   const user = useGetUser()
@@ -18,6 +20,7 @@ function App() {
               { field: 'password', text: 'Password (optional)', type: 'string' }
             ]} />
           <button onClick={() => logout()}>Sign Out</button>
+          <List child={LobbyItem} dbRef='lobbies' />
         </>
         :
         <>

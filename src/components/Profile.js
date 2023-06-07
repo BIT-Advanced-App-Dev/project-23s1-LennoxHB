@@ -1,4 +1,4 @@
-function LobbyList() {
+function List() {
     return (
         <>
         </>
