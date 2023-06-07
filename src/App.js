@@ -10,6 +10,7 @@ function App() {
       {user?.displayName ?
         <>
           <SimpleForm
+            key='1'
             formName="Create Lobby"
             submitCallback={createLobby}
             inputData={[
@@ -21,6 +22,7 @@ function App() {
         :
         <>
           <SimpleForm
+            key='2'
             formName="Login"
             submitCallback={login}
             inputData={[
@@ -28,6 +30,7 @@ function App() {
               { field: 'password', text: 'Password', type: 'password' }
             ]} />
           <SimpleForm
+            key='3'
             formName="Register"
             submitCallback={register}
             inputData={[

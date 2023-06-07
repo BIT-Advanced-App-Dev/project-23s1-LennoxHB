@@ -16,6 +16,7 @@ export default function SimpleForm(props) {
                 <ModalFooter>
                     <button onClick={() => toggle.activate()}>Cancel</button>
                     <button onClick={() => {
+                        console.log(inputs.values)
                         submitCallback(inputs.values)
                         toggle.activate()
                     }}>Confirm</button>

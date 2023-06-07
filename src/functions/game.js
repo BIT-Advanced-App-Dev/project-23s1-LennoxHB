@@ -3,6 +3,6 @@ import { createDocument } from "./crud.js"
 import { doc } from "firebase/firestore"
 
 export const createLobby = async (data) => {
-    const ref = doc(firestore, `lobbies`, data.Name)
+    const ref = doc(firestore, `lobbies`, data.name)
     await createDocument(ref, data)
 }
