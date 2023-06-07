@@ -5,17 +5,29 @@ export const handleSubmit = (fn, data) => {
 }
 
 export const useGenerateInputs = (inputData) => {
-    const initialValues = inputData.reduce((obj, item) => {
-        return {
-            ...obj,
-            [item.field]: null
-        }
+    const initialValues = inputData.reduce((obj, item) => {        
+        return (
+            item?.value ?
+                {
+                    ...obj,
+                    [item.field]: item?.value
+                }
+                :
+                {
+                    ...obj,
+                    [item.field]: null
+                }
+        )
     }, {})
     const [values, setValues] = useState(initialValues)
     const inputList = inputData.map((input, index) => {
         return (
             <li key={index} >
-                <div>{input.text[0].toUpperCase()}{input.text.slice(1)}</div>
+                {input.text ?
+                    <div>{input.text[0].toUpperCase()}{input.text.slice(1)}</div>
+                    :
+                    <></>
+                }
                 <input
                     type={input.type}
                     name={input.field}

@@ -6,7 +6,6 @@ export default function List({ child: Child, dbRef }) {
     return (
         <>
             {data.map((item) => {
-                console.log(item)
                 return (
                     <Child data={{...item, key: item.id}} />
                 )
