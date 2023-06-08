@@ -5,7 +5,7 @@ export default function LobbyItem({ data }) {
     const { name, key, password } = data
 
     return (
-        <li className='lobbyItem' key={key}>
+        <div className='lobbyItem'>
             <h2>{name}</h2>
             {password ?
                 <SimpleForm
@@ -18,6 +18,6 @@ export default function LobbyItem({ data }) {
                 :
                 <button onClick={() => joinLobby(name)}>Join Game</button>
             }
-        </li>
+        </div>
     )
 }
