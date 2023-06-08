@@ -3,7 +3,7 @@ import SiteAccess from './components/siteAccess';
 import LobbyPage from './components/LobbyPage';
 import Profile from './components/Profile';
 
-function App() {
+export default function App() {
   const user = useGetUser()
 
   return (
@@ -20,5 +20,3 @@ function App() {
     </>
   );
 }
-
-export default App;
