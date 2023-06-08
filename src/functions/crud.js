@@ -1,4 +1,4 @@
-import { setDoc, collection, deleteDoc, getDoc, getDocs, updateDoc, onSnapshot } from 'firebase/firestore';
+import { setDoc, collection, deleteDoc, getDoc, getDocs, updateDoc, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from "react"
 import { firestore } from '../firebase';
 
@@ -23,11 +23,14 @@ export const updateDocument = async (doc, data) => {
 
 export const useOnSnapshot = (ref) => {
     const [data, setData] = useState([])
-    useEffect(() => {
-        const unsub = onSnapshot(collection(firestore, ref), (shot) => {
-            setData(shot.docs.map((doc) => (
-                { ...doc.data(), id: doc.id }
-            )))
+    useEffect(() => {        
+        const q = query(collection(firestore, ref), where("started", "==", false))
+        const unsub = onSnapshot(q, (shot) => {
+            setData(shot.docs.map((doc) => {
+                return (
+                    { ...doc.data(), id: doc.id }
+                )
+            }))
         })
         return () => unsub()
     }, [])
