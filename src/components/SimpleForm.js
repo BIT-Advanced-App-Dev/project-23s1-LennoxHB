@@ -22,6 +22,7 @@ export default function SimpleForm(props) {
                 <ModalFooter>
                     <button onClick={() => toggle.activate()}>Cancel</button>
                     <button onClick={async () => {
+                        console.log(inputs.values)
                         const res = await dbCallWrapper(setSpinState, setError, submitCallback, inputs.values)
                         if (res?.error != true) {
                             toggle.activate()

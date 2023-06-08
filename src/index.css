@@ -7,7 +7,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 1.8vw;
   background-color: #1e2024;
+  color: #d8e0ed;
 }
+
 .lobbyItem {
   color: #d8e0ed;
   background-color: #111114;
@@ -35,7 +37,8 @@ input {
 button {
   font-size: 1.8vw;
   background-color: #2b2e33;
-  color: #d8e0ed;  
+  color: #d8e0ed;
+  margin: 1vw;
 }
 
 button:hover {
@@ -48,17 +51,32 @@ button:hover {
   grid-template-columns: 5fr 8fr 1fr;
   column-gap: 5px;
 }
+
 .modal-form li span {
-  display: grid;  
+  display: grid;
   grid-template-columns: 9fr 1fr;
   padding: 0.5vw
+}
+
+.profile {
+  display: flex;
+  color: #d8e0ed;
+  justify-content: end;
+  padding: 1vw;
+  position: absolute;
+  right: 0;
+}
+
+.profile h3 {
+  padding: 1vw;
 }
 
 .errorHandler {
   margin: 5px;
   align-items: center;
 }
-.errorHandler .message {  
+
+.errorHandler .message {
   background-color: #570f0d;
   color: #fcd5d4;
 }
