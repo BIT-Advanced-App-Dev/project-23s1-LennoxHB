@@ -4,13 +4,15 @@ import { useToggle } from '../functions/utility'
 import ErrorHandler from './ErrorHandler'
 import { useState } from 'react'
 import { dbCallWrapper } from '../functions/db'
+import { useNavigate } from 'react-router-dom'
 
 export default function SimpleForm(props) {
-    const { formName, inputData, submitCallback } = props
+    const { formName, inputData, submitCallback, link } = props
     const toggle = useToggle()
     const inputs = useGenerateInputs(inputData)
     const [error, setError] = useState('')
     const [spinState, setSpinState] = useState(false)
+    const navigate = useNavigate()
 
     return (
         <>
@@ -22,10 +24,12 @@ export default function SimpleForm(props) {
                 <ModalFooter>
                     <button onClick={() => toggle.activate()}>Cancel</button>
                     <button onClick={async () => {
-                        console.log(inputs.values)
                         const res = await dbCallWrapper(setSpinState, setError, submitCallback, inputs.values)
-                        if (res?.error != true) {
+                        if (res?.error != true) {                            
                             toggle.activate()
+                            if(link) {
+                                navigate(`${link}${inputs.values.id}`)
+                            }
                         }
                     }}>Confirm</button>
                 </ModalFooter>

@@ -1,7 +1,7 @@
-import {  useGetUser } from './functions/auth';
+import { useGetUser } from './functions/auth';
 import SiteAccess from './components/siteAccess';
-import LobbyPage from './components/LobbyPage';
 import Profile from './components/Profile';
+import Navigation from './components/Navigation';
 
 export default function App() {
   const user = useGetUser()
@@ -11,7 +11,7 @@ export default function App() {
       {user?.displayName ?
         <>
           <Profile name={user?.displayName} />
-          <LobbyPage />
+          <Navigation />
         </>
         :
         <>
