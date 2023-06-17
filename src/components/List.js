@@ -1,7 +1,7 @@
-import { useOnSnapshot } from "../functions/crud"
+import { useGetLobbies } from "../functions/game"
 
 export default function List({ child: Child, dbRef }) {    
-    const data = useOnSnapshot(dbRef)
+    const data = useGetLobbies(dbRef)
 
     return (
         <>
