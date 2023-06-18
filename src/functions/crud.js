@@ -1,4 +1,4 @@
-import { setDoc, deleteDoc, getDoc, getDocs, updateDoc, onSnapshot } from 'firebase/firestore';
+import { addDoc, setDoc, deleteDoc, getDoc, getDocs, updateDoc, onSnapshot } from 'firebase/firestore';
 import { useEffect, useState } from "react"
 
 export const getDocuments = async (query) => {

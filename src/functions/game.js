@@ -13,6 +13,11 @@ export const joinLobby = async ({ id, host = false }) => {
     await setDocument(player, { host: host })
 }
 
+export const createGame = async (data) => {
+    const game = collection(firestore, `games`)
+    await createDocument(game, { ...data})
+}
+
 export const useGetLobbies = (dbRef) => {
     return useOnSnapshot(query(collection(firestore, dbRef), where("started", "==", false)))    
 }
@@ -22,6 +27,6 @@ export const isHost = async (lobbyId) => {
     return await getDocument(hostDoc).host
 }
 
-export const useGetLobbyPlayers = async (lobbyId) => {
-    return useOnSnapshot(collection(firestore, `lobbies/${lobbyId}/players`))    
+export const useGetLobbyPlayers = (lobbyId) => {
+    return useOnSnapshot(collection(firestore, `lobbies/${lobbyId}/players`)).map((player) => player.id)
 }
