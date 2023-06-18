@@ -8,8 +8,13 @@ export const getDocuments = async (query) => {
 export const getDocument = async (query) => {
     return await getDoc(query)
 }
-export const createDocument = async (ref, data) => {
+
+export const setDocument = async (ref, data) => {
     await setDoc(ref, data)
+}
+
+export const createDocument = async (ref, data) => {
+    await addDoc(ref, data)
 }
 
 export const deleteDocument = async (doc) => {
