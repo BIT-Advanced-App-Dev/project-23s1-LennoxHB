@@ -11,7 +11,8 @@ export const getDocuments = async (query) => {
 }
 
 export const getDocument = async (query) => {
-    return await getDoc(query)
+    const doc = await getDoc(query)
+    return { ...doc.data(), id: doc.id }
 }
 
 export const setDocument = async (ref, data) => {

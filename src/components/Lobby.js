@@ -1,15 +1,17 @@
 import { useParams } from "react-router-dom"
-import { isHost, useGetLobbyPlayers } from "../functions/game"
+import { createGame, isHost, useGetLobbyPlayers, useMigrateListener } from "../functions/game"
 
 export default function Lobby() {
-    const params = useParams()
-    const host = isHost()
-    const players = useGetLobbyPlayers(params.id)
+    const { id } = useParams()
+    const host = isHost('lobbies', id)
+    const players = useGetLobbyPlayers(id)
+    useMigrateListener(id)
+
     return (
         <>            
             {host ?
-                <button onClick={() => {
-
+                <button onClick={async () => {
+                    createGame(id)
                 }}>Start Game</button>
                 :
                 <p>Waiting for game to start...</p>

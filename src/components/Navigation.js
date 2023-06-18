@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 import MainPage from './MainPage';
 import Lobby from './Lobby';
+import Game from './Game';
 
 export default function Navigation() {
     return (
@@ -11,6 +12,7 @@ export default function Navigation() {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path= "/lobby/:id" element={<Lobby />} />
+                <Route path= "/game/:id" element={<Game />} />
             </Routes>
         </>
     )
