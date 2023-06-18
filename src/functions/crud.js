@@ -19,7 +19,7 @@ export const setDocument = async (ref, data) => {
 }
 
 export const createDocument = async (ref, data) => {
-    await addDoc(ref, data)
+    return await addDoc(ref, data)
 }
 
 export const deleteDocument = async (doc) => {
@@ -30,7 +30,18 @@ export const updateDocument = async (doc, data) => {
     await updateDoc(doc, data)
 }
 
-export const useOnSnapshot = (query) => {
+export const useDocumentListener = (query) => {
+    const [data, setData] = useState([])
+    useEffect(() => {
+        const unsub = onSnapshot(query, (doc) => {
+            setData({ ...doc.data(), id: doc.id })
+        })
+        return () => unsub()
+    }, [])
+    return data
+}
+
+export const useCollectionListener = (query) => {
     const [data, setData] = useState([])
     useEffect(() => {
         const unsub = onSnapshot(query, (shot) => {
