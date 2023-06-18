@@ -20,7 +20,7 @@ export default function LobbyItem({ data }) {
                     ]} />
                 :
                 <button onClick={() => {
-                    joinLobby(id)
+                    joinLobby({id})
                     navigate(`/lobby/${id}`)
                 }
                 }>Join Game</button>
