@@ -2,7 +2,12 @@ import { addDoc, setDoc, deleteDoc, getDoc, getDocs, updateDoc, onSnapshot } fro
 import { useEffect, useState } from "react"
 
 export const getDocuments = async (query) => {
-    return await getDocs(query)
+    const snapshot = await getDocs(query)
+    return snapshot.docs.map((doc) => {
+        return (
+            { ...doc.data(), id: doc.id }
+        )
+    })
 }
 
 export const getDocument = async (query) => {
