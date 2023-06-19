@@ -52,6 +52,7 @@ export const announceConnection = async (gameId) => {
 
 export const useConnectionListenr = (gameId) => {
     const [check, setCheck] = useState(false)
+    const [finalCheck, setFinalCheck] = useState(false)
     const players = useCollectionListener(collection(firestore, `games/${gameId}/players`))
     useEffect(() => {
         setCheck(true)
@@ -60,8 +61,9 @@ export const useConnectionListenr = (gameId) => {
                 setCheck(false)
             }
         })
+        setFinalCheck(check)
     }, [players])
-    return check
+    return finalCheck
 }
 
 export const useStartGame = (gameId) => {
