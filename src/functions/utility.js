@@ -11,3 +11,13 @@ export const useToggle = () => {
         }
     }
 }
+
+export const shuffleArray = (arr) => {
+    for (idx = arr.length - 1; idx > 0; idx--) {
+        random = Math.floor(Math.random() * idx)
+        prev = arr[idx]
+        arr[idx] = arr[random]
+        arr[random] = prev
+    }
+    return arr
+}
