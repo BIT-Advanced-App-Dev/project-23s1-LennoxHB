@@ -21,3 +21,10 @@ export const shuffleArray = (arr) => {
     }
     return arr
 }
+
+export const countArrayItems = (arr) => {
+    return arr.reduce((acc, curr) => {
+        acc[curr] = acc[curr] + 1 || 1
+        return acc
+    }, {})
+}
