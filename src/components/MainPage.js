@@ -11,7 +11,7 @@ export default function MainPage() {
                 submitCallback={createLobby}
                 link={'/lobby/'}
                 inputData={[
-                    { field: 'id', text: 'Name', type: 'string' },
+                    { field: 'name', text: 'Name', type: 'string' },
                     { field: 'playerCount', text: 'Max Players', type: 'range', min: 2, max: 6, value: 6 },
                     { field: 'password', text: 'Password (optional)', type: 'string' }
                 ]} 

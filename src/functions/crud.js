@@ -16,11 +16,12 @@ export const getDocument = async (query) => {
 }
 
 export const setDocument = async (ref, data) => {
-    await setDoc(ref, data)
+    return await setDoc(ref, data)
 }
 
 export const createDocument = async (ref, data) => {
-    return await addDoc(ref, data)
+    const create = await addDoc(ref, data)
+    return create.id
 }
 
 export const deleteDocument = async (doc) => {

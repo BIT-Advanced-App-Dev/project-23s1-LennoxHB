@@ -4,11 +4,12 @@ import { setDocument, createDocument, getDocument, getDocuments, useCollectionLi
 import { doc, collection, query, where, limit } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
 import { shuffleArray } from "./utility.js"
+import { useRenderRead } from "./db.js"
 
 export const createLobby = async (data) => {
-    const lobby = doc(firestore, `lobbies`, data.id)
-    await setDocument(lobby, { ...data, started: false, migrateTrigger: false })
-    await joinLobby({ id: data.id, host: true })
+    const lobby = await createDocument(collection(firestore, 'lobbies'), { ...data, started: false, migrateTrigger: false })
+    await joinLobby({ id: lobby, host: true })
+    return lobby
 }
 
 export const joinLobby = async ({ id, host = false }) => {
@@ -21,7 +22,7 @@ export const createGame = async (lobbyId) => {
     const gameCol = collection(firestore, `games`)
     await updateDocument(lobbyDoc, { started: true })
     const game = await createDocument(gameCol, { started: false, name: lobbyId })
-    await migratePlayers(lobbyDoc, lobbyId, game.id)
+    await migratePlayers(lobbyDoc, lobbyId, game)
 }
 
 const migratePlayers = async (lobbyDoc, lobbyId, gameId) => {
@@ -32,7 +33,7 @@ const migratePlayers = async (lobbyDoc, lobbyId, gameId) => {
             host: player.host,
             connected: false
         })
-    })
+    })    
     await updateDocument(lobbyDoc, { migrateTrigger: true, migrateTo: gameId })
 }
 
@@ -48,7 +49,7 @@ export const useMigrateListener = (lobbyId) => {
 
 export const announceConnection = async (gameId) => {
     const player = doc(firestore, `games/${gameId}/players`, auth.currentUser.displayName)
-    await setDocument(player, { connected: true })
+    await updateDocument(player, { connected: true })
 }
 
 export const useConnectionListenr = (gameId) => {
@@ -69,19 +70,25 @@ export const useConnectionListenr = (gameId) => {
 
 export const useStartGame = (gameId) => {
     const checkConnection = useConnectionListenr()
-    useEffect(() => {
-        if (isHost('games', gameId) && checkConnection) {
+    const host = useRenderRead(isHost, {col: 'games', id: gameId})
+    useEffect(() => {        
+        console.log(host)
+        if (host === true && checkConnection) {
             gameLoop(gameId)
         }
     }, [checkConnection])
 }
 
 const gameLoop = async (gameId) => {
-    await populateDeck(gameId)
-    const players = await getDocuments(collection(firestore, `games/${gameId}/players`))
-    players.forEach((player) => {
-        drawCards(player, gameId, 5)
-    })
+    const game = await getDocument(doc(firestore, `games/${gameId}`))
+    if (game.started === false) {
+        await updateDocument(doc(firestore, `games/${gameId}`), { started: true })
+        await populateDeck(gameId)
+        const players = await getDocuments(collection(firestore, `games/${gameId}/players`))
+        for (const player of players) {
+            await drawCards(player, gameId, 5)
+        }
+    }
 }
 
 const populateDeck = async (gameId) => {
@@ -92,6 +99,7 @@ const populateDeck = async (gameId) => {
         ranks.forEach((rank) => {
             deck.push(
                 {
+                    img: `${rank.id}${suit.id}`,
                     text: `${rank.text} of ${suit.text}`,
                     value: rank.value
                 }
@@ -105,11 +113,15 @@ const populateDeck = async (gameId) => {
 }
 
 const drawCards = async (player, gameId, amount) => {
-    for (let idx = amount - 1; idx > 0; idx--) {
+    for (let idx = amount; idx > 0; idx--) {
         const [card] = await getDocuments(query(collection(firestore, `games/${gameId}/deck`), limit(1)))
         await createDocument(collection(firestore, `games/${gameId}/players/${player.id}/hand`), card)
         await deleteDocument(doc(firestore, `games/${gameId}/deck`, card.id))
     }
+}
+
+export const useShowCards = (gameId) => {    
+    return useCollectionListener(collection(firestore, `games/${gameId}/players/${auth.currentUser.displayName}/hand`))
 }
 
 export const getPlayers = async (id) => {
@@ -120,9 +132,10 @@ export const useGetLobbies = (dbRef) => {
     return useCollectionListener(query(collection(firestore, dbRef), where("started", "==", false)))
 }
 
-export const isHost = async (col, id) => {
+export const isHost = async ({col, id}) => {
     const hostDoc = doc(firestore, `${col}/${id}/players/${auth.currentUser.displayName}`)
-    return await getDocument(hostDoc).host
+    const host = await getDocument(hostDoc)    
+    return host.host
 }
 
 export const useGetLobbyPlayers = (lobbyId) => {

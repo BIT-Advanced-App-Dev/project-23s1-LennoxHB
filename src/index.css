@@ -7,7 +7,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 1.8vw;
   background-color: #1e2024;
-  color: #d8e0ed;
+  color: hsl(217, 37%, 89%);
+}
+
+.playerHand {
+  padding: 0.4rem;
+  background-color: #111114;
+  text-align: center;
+  margin: 2rem;
+}
+
+.cards {
+  display: grid;  
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  column-gap: 0.5rem;
+  padding: 0.4rem;
+}
+
+img {
+  width: 100%;
 }
 
 .lobbyItem {
