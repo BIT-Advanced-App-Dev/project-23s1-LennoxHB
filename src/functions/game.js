@@ -3,6 +3,7 @@ import { firestore, auth } from "../firebase.js"
 import { setDocument, createDocument, getDocument, getDocuments, useCollectionListener, updateDocument, useDocumentListener, deleteDocument, } from "./crud.js"
 import { doc, collection, query, where, getDoc } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
+import { shuffleArray } from "./utility.js"
 
 export const createLobby = async (data) => {
     const lobby = doc(firestore, `lobbies`, data.id)
@@ -70,9 +71,34 @@ export const useStartGame = (gameId) => {
     const checkConnection = useConnectionListenr()
     useEffect(() => {
         if (isHost('games', gameId) && checkConnection) {
-            // start game loop
+            gameLoop(gameId)
         }
     }, [checkConnection])
+}
+
+const gameLoop = async (gameId) => {
+    await populateDeck(gameId)    
+}
+
+export const populateDeck = async (gameId) => {
+    const suits = await getDocuments(collection(firestore, `resources/CARDS/houses`))
+    const ranks = await getDocuments(collection(firestore, `resources/CARDS/classes`))
+    const deck = []
+    suits.forEach((suit) => {
+        ranks.forEach((rank) => {
+            deck.push(
+                {
+                    id: rank.id + suit.id,
+                    text: `${rank.text} of ${suit.text}`,
+                    value: rank.value
+                }
+            )
+        })
+    })
+    const shuffledDeck = shuffleArray(deck)
+    shuffledDeck.forEach(async (card) => {
+        await createDocument(collection(firestore, `games/${gameId}/deck`), card)
+    })
 }
 
 export const getPlayers = async (id) => {
