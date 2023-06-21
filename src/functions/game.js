@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { firestore, auth } from "../firebase.js"
 import { setDocument, createDocument, getDocument, getDocuments, useCollectionListener, updateDocument, useDocumentListener, deleteDocument, } from "./crud.js"
-import { doc, collection, query, where, getDoc } from "firebase/firestore"
+import { doc, collection, query, where, limit } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
 import { shuffleArray } from "./utility.js"
 
@@ -77,10 +77,14 @@ export const useStartGame = (gameId) => {
 }
 
 const gameLoop = async (gameId) => {
-    await populateDeck(gameId)    
+    await populateDeck(gameId)
+    const players = await getDocuments(collection(firestore, `games/${gameId}/players`))
+    players.forEach((player) => {
+        drawCards(player, gameId, 5)
+    })
 }
 
-export const populateDeck = async (gameId) => {
+const populateDeck = async (gameId) => {
     const suits = await getDocuments(collection(firestore, `resources/CARDS/houses`))
     const ranks = await getDocuments(collection(firestore, `resources/CARDS/classes`))
     const deck = []
@@ -88,7 +92,6 @@ export const populateDeck = async (gameId) => {
         ranks.forEach((rank) => {
             deck.push(
                 {
-                    id: rank.id + suit.id,
                     text: `${rank.text} of ${suit.text}`,
                     value: rank.value
                 }
@@ -99,6 +102,14 @@ export const populateDeck = async (gameId) => {
     shuffledDeck.forEach(async (card) => {
         await createDocument(collection(firestore, `games/${gameId}/deck`), card)
     })
+}
+
+const drawCards = async (player, gameId, amount) => {
+    for (let idx = amount - 1; idx > 0; idx--) {
+        const [card] = await getDocuments(query(collection(firestore, `games/${gameId}/deck`), limit(1)))
+        await createDocument(collection(firestore, `games/${gameId}/players/${player.id}/hand`), card)
+        await deleteDocument(doc(firestore, `games/${gameId}/deck`, card.id))
+    }
 }
 
 export const getPlayers = async (id) => {
