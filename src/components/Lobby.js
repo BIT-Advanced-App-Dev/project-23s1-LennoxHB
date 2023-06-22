@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom"
-import { createGame, isHost, useGetLobbyPlayers, useMigrateListener } from "../functions/game"
+import { createGame, isHost, useGetLobbyPlayers, useGetPlayers, useMigrateListener } from "../functions/game"
 import { useRenderRead } from "../functions/db"
 
 export default function Lobby() {
     const { id } = useParams()
     const host = useRenderRead(isHost, {col: 'lobbies', id: id})
-    const players = useGetLobbyPlayers(id)
+    const players = useGetPlayers(id)
     useMigrateListener(id)
 
     return (

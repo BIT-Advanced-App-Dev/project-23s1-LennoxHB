@@ -1,9 +1,5 @@
 import { useState } from "react"
 
-export const handleSubmit = (fn, data) => {
-    fn(data)
-}
-
 export const useGenerateInputs = (inputData) => {
     const initialValues = inputData.reduce((obj, item) => {
         return (

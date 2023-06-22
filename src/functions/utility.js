@@ -28,3 +28,11 @@ export const countArrayItems = (arr) => {
         return acc
     }, {})
 }
+
+export const hasDuplicates = (arr) =>{
+    const filter = arr.filter((item) => item == arr[0])
+    if (arr.length != filter.length) {
+        return true
+    }
+    return false
+}

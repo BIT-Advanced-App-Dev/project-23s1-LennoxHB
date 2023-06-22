@@ -3,7 +3,7 @@ import { firestore, auth } from "../firebase.js"
 import { setDocument, createDocument, getDocument, getDocuments, useCollectionListener, updateDocument, useDocumentListener, deleteDocument, } from "./crud.js"
 import { doc, collection, query, where, limit } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
-import { shuffleArray } from "./utility.js"
+import { countArrayItems, hasDuplicates, shuffleArray } from "./utility.js"
 import { useRenderRead } from "./db.js"
 
 export const createLobby = async (data) => {
@@ -21,19 +21,20 @@ export const createGame = async (lobbyId) => {
     const lobbyDoc = doc(firestore, `lobbies`, lobbyId)
     const gameCol = collection(firestore, `games`)
     await updateDocument(lobbyDoc, { started: true })
-    const game = await createDocument(gameCol, { started: false, name: lobbyId })
+    const game = await createDocument(gameCol, { phase: 'preparing', started: false })
     await migratePlayers(lobbyDoc, lobbyId, game)
 }
 
 const migratePlayers = async (lobbyDoc, lobbyId, gameId) => {
-    const players = await getPlayers(lobbyId)
+    const players = await getPlayers({ col: 'lobbies', id: lobbyId })    
+    console.log(players)
     players.forEach(async (player) => {
         const playerDoc = doc(firestore, `games/${gameId}/players`, player.id)
         await setDocument(playerDoc, {
             host: player.host,
             connected: false
         })
-    })    
+    })
     await updateDocument(lobbyDoc, { migrateTrigger: true, migrateTo: gameId })
 }
 
@@ -68,27 +69,31 @@ export const useConnectionListenr = (gameId) => {
     return finalCheck
 }
 
-export const useStartGame = (gameId) => {
-    const checkConnection = useConnectionListenr()
-    const host = useRenderRead(isHost, {col: 'games', id: gameId})
-    useEffect(() => {        
-        console.log(host)
+export const useStartGame = (players, gameId) => {
+    const checkConnection = useConnectionListenr(gameId)
+    const host = useRenderRead(isHost, { col: 'games', id: gameId })
+    useEffect(() => {
         if (host === true && checkConnection) {
             gameLoop(gameId)
         }
-    }, [checkConnection])
+    }, [checkConnection, host])
 }
 
 const gameLoop = async (gameId) => {
     const game = await getDocument(doc(firestore, `games/${gameId}`))
-    if (game.started === false) {
+    if (game.started === false && game.phase != 'concluded') {
         await updateDocument(doc(firestore, `games/${gameId}`), { started: true })
         await populateDeck(gameId)
         const players = await getDocuments(collection(firestore, `games/${gameId}/players`))
         for (const player of players) {
             await drawCards(player, gameId, 5)
         }
+        const hightScore = await calculateHighScore(players, gameId)
+        await updateDocument(doc(firestore, `games/${gameId}`), { phase: 'concluded', started: false, winner: hightScore })
     }
+}
+export const useGetGameState = (gameId) => {
+    return useDocumentListener(doc(firestore, `games/${gameId}`))
 }
 
 const populateDeck = async (gameId) => {
@@ -101,7 +106,8 @@ const populateDeck = async (gameId) => {
                 {
                     img: `${rank.id}${suit.id}`,
                     text: `${rank.text} of ${suit.text}`,
-                    value: rank.value
+                    rank: rank.value,
+                    suit: suit.value
                 }
             )
         })
@@ -120,24 +126,89 @@ const drawCards = async (player, gameId, amount) => {
     }
 }
 
-export const useShowCards = (gameId) => {    
-    return useCollectionListener(collection(firestore, `games/${gameId}/players/${auth.currentUser.displayName}/hand`))
+export const useShowCards = (player, gameId) => {
+    return useCollectionListener(collection(firestore, `games/${gameId}/players/${player.id}/hand`))
 }
 
-export const getPlayers = async (id) => {
-    return getDocuments(collection(firestore, `lobbies/${id}/players`))
+export const getPlayers = async ({ col, id }) => {
+    const temp = (await getDocuments(collection(firestore, `${col}/${id}/players`))).map((player) => {
+        if (player.id == auth.currentUser.displayName) {
+            return { ...player, you: true }
+        }
+        else {
+            return { ...player }
+        }
+    })
+    return temp
 }
 
 export const useGetLobbies = (dbRef) => {
     return useCollectionListener(query(collection(firestore, dbRef), where("started", "==", false)))
 }
 
-export const isHost = async ({col, id}) => {
+export const isHost = async ({ col, id }) => {
     const hostDoc = doc(firestore, `${col}/${id}/players/${auth.currentUser.displayName}`)
-    const host = await getDocument(hostDoc)    
+    const host = await getDocument(hostDoc)
     return host.host
 }
 
-export const useGetLobbyPlayers = (lobbyId) => {
+export const useGetPlayers = (lobbyId) => {
     return useCollectionListener(collection(firestore, `lobbies/${lobbyId}/players`)).map((player) => player.id)
 }
+
+const checkRanks = (conditionRanks, handRanks) => {
+    let finalCheck = true
+    const used = []
+    const countRanks = countArrayItems(handRanks)
+    conditionRanks.forEach((conditionRanks) => {
+        let check = false
+        for (const [cardRank, cardOccurance] of Object.entries(countRanks)) {
+            if (((conditionRanks.value == cardRank) || (conditionRanks.value == 'any')
+                || ((conditionRanks.value == 'consecutive') && ((used.length == 0) || (cardRank == (Number(used[used.length - 1]) + 1)))))
+                && (conditionRanks.occurance == cardOccurance)
+                && ((!check) && (!used.includes(cardRank)))) {
+                check = true
+                used.push(cardRank)
+            }
+        }
+        if (finalCheck && !check) {
+            finalCheck = false
+        }
+    })
+    return finalCheck
+}
+
+const calculateHighScore = async (players, gameId) => {
+    const conditions = await getDocuments(collection(firestore, 'resources/CARDS/conditions'))
+    let results = []
+    for (const player of players) {
+        const hand = await getDocuments(collection(firestore, `games/${gameId}/players/${player.id}/hand`))
+        const ranks = hand.map((card) => card.rank)
+        const suits = hand.map((card) => card.suit)
+        results.push({ ...calculateScore(ranks, suits, conditions), player: player.id }) 
+    }
+    return results.reduce((prev, curr) => {
+        return curr.points > prev.points ? curr : prev
+    }, { points: 0 })
+}
+const calculateScore = (ranks, suits, conditions) => {
+    const candidates = []
+    const highCard = ranks.reduce((prev, curr) => {
+        return curr > prev ? curr : prev
+    }, 0)
+    conditions.forEach((condition) => {
+        if ((!hasDuplicates(suits) === condition.sameSuit) && (checkRanks(condition.ranks, ranks))) {
+            candidates.push({ text: condition.text, points: condition.points + highCard })
+        }
+    })
+    if (candidates.length > 0) {
+        return candidates.reduce((prev, curr) => {
+            return curr.points > prev.points ? curr : prev
+        }, { points: 0 })
+    }
+    else {
+        return { text: 'High Card', points: highCard }
+    }
+}
+
+// export const useGetScores

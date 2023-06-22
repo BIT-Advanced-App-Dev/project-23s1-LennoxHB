@@ -1,11 +1,11 @@
 import { useShowCards } from "../functions/game"
 
-export default function Hand({ id }) {
-    const cards = useShowCards(id)
+export default function Hand({ player, gameId }) {
+    const cards = useShowCards(player, gameId)
     return (
         <>
             <div className="playerHand">
-                <h1>Your Hand</h1>
+                {player.you ? <h1>Your Hand</h1> : <h1>{`${player.id}'s Hand`}</h1>}
                 <div className="cards">
                     {cards.map((item) => {
                         return (

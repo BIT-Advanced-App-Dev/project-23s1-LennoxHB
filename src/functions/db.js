@@ -14,8 +14,8 @@ export const dbCallWrapper = async (setSpin, setError, fn, payload) => {
 }
 
 
-export const useRenderRead = (fn, payload) => {
-    const [data, setData] = useState([])
+export const useRenderRead = (fn, payload, initial = false) => {
+    const [data, setData] = useState(initial)
     useEffect(() => {
         const setRead = async () => {
             setData(await fn(payload))
