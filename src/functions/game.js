@@ -19,6 +19,11 @@ export const joinLobby = async ({ id, host = false }) => {
     await setDocument(player, { host: host })
 }
 
+// Remove player from lobby.
+export const leaveLobby = async (id) => {
+    await deleteDocument(doc(firestore, `lobbies/${id}/players`, auth.currentUser.displayName))
+}
+
 // Creates a game from lobby.
 export const createGame = async (lobbyId) => {
     const lobbyDoc = doc(firestore, `lobbies`, lobbyId)

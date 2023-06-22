@@ -29,7 +29,7 @@ export default function SimpleForm(props) {
                         if (res?.error != true) {                            
                             toggle.activate()
                             if(link) {
-                                navigate(`${link}${inputs.values.id}`)
+                                navigate(`${link}${res}`)
                             }
                         }
                     }}>Confirm</button>
