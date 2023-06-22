@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom"
 import { createGame, isHost, useGetLobbyPlayers, useGetPlayers, useMigrateListener } from "../functions/game"
 import { useRenderRead } from "../functions/db"
 
+// Pregame lobby, shows who is waiting for the game to start, renders option for host to start the game.
 export default function Lobby() {
     const { id } = useParams()
     const host = useRenderRead(isHost, {col: 'lobbies', id: id})

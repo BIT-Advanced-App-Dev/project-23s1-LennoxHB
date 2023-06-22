@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 
+// Wrap calls to database to handle error handling on frontend.
 export const dbCallWrapper = async (setSpin, setError, fn, payload) => {
     try {
         setSpin(true)
@@ -13,7 +14,7 @@ export const dbCallWrapper = async (setSpin, setError, fn, payload) => {
     }
 }
 
-
+// Tries to get data then rerenders component with data
 export const useRenderRead = (fn, payload, initial = false) => {
     const [data, setData] = useState(initial)
     useEffect(() => {

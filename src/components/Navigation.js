@@ -6,6 +6,7 @@ import MainPage from './MainPage';
 import Lobby from './Lobby';
 import Game from './Game';
 
+// Does not render anything, contains routes that are used on the app.
 export default function Navigation() {
     return (
         <>

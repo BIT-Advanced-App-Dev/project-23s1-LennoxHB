@@ -1,6 +1,8 @@
 import { useState } from "react"
 
+// Generates the input fields used in the custom form
 export const useGenerateInputs = (inputData) => {
+    // Get initial value of fields.
     const initialValues = inputData.reduce((obj, item) => {
         return (
             item?.value ?

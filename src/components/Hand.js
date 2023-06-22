@@ -1,5 +1,5 @@
 import { useShowCards } from "../functions/game"
-
+// Renders the cards in player's hand
 export default function Hand({ player, gameId }) {
     const cards = useShowCards(player, gameId)
     return (

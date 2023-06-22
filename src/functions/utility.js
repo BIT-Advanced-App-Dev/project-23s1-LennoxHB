@@ -1,5 +1,6 @@
 import { useState } from "react"
 
+// Toggle state true/false
 export const useToggle = () => {
     const [bool, setBool] = useState(false)
     return {
@@ -12,6 +13,7 @@ export const useToggle = () => {
     }
 }
 
+// Randomly shuffle items in an array.
 export const shuffleArray = (arr) => {
     for (let idx = arr.length - 1; idx > 0; idx--) {
         const random = Math.floor(Math.random() * idx)
@@ -22,6 +24,7 @@ export const shuffleArray = (arr) => {
     return arr
 }
 
+// Count how often an items occur in an array.
 export const countArrayItems = (arr) => {
     return arr.reduce((acc, curr) => {
         acc[curr] = acc[curr] + 1 || 1
@@ -29,6 +32,7 @@ export const countArrayItems = (arr) => {
     }, {})
 }
 
+// Check if array has duplicate items or not.
 export const hasDuplicates = (arr) =>{
     const filter = arr.filter((item) => item == arr[0])
     if (arr.length != filter.length) {

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { dbCallWrapper } from '../functions/db'
 import { useNavigate } from 'react-router-dom'
 
+// Renders a customisable form.
 export default function SimpleForm(props) {
     const { formName, inputData, submitCallback, link } = props
     const toggle = useToggle()
@@ -28,7 +29,7 @@ export default function SimpleForm(props) {
                         if (res?.error != true) {                            
                             toggle.activate()
                             if(link) {
-                                navigate(`${link}${res}`)
+                                navigate(`${link}${inputs.values.id}`)
                             }
                         }
                     }}>Confirm</button>

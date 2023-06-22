@@ -1,5 +1,6 @@
 import { logout } from "../functions/auth"
 
+// Renders user name and logout button.
 export default function Profile({ name }) {
     return (
         <div className="profile">

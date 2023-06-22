@@ -2,6 +2,8 @@ import SimpleForm from "./SimpleForm"
 import { joinLobby } from "../functions/game"
 import { useNavigate } from 'react-router-dom'
 
+// Renders a lobby element users can use to join a lobby.
+// Removed password feature because didn't have time to fix issues.
 export default function LobbyItem({ data }) {
     const { name, id, password } = data
     const navigate = useNavigate()
