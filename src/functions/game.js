@@ -29,7 +29,7 @@ export const createGame = async (lobbyId) => {
     const lobbyDoc = doc(firestore, `lobbies`, lobbyId)
     const gameCol = collection(firestore, `games`)
     await updateDocument(lobbyDoc, { started: true })
-    const game = await createDocument(gameCol, { phase: 'preparing', started: false })
+    const game = await createDocument(gameCol, { phase: 'preparing', started: false, host: auth.currentUser.displayName })
     await migratePlayers(lobbyDoc, lobbyId, game)
 }
 
