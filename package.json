@@ -19,6 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "mocha --timeout 20000 -- ./test",
+    "testSR": "mocha --timeout 20000 -r @babel/register -- ./testrules",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -43,6 +44,7 @@
     "@babel/core": "^7.22.1",
     "@babel/preset-react": "^7.22.3",
     "@babel/register": "^7.21.0",
+    "@firebase/rules-unit-testing": "^2.0.7",
     "chai": "^4.3.7",
     "chai-dom": "^1.11.0",
     "mocha": "^10.2.0",

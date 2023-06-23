@@ -29,7 +29,7 @@ export const register = async (req) => {
     const { email, password, displayName } = req
     await createUserWithEmailAndPassword(auth, email, password)
     await updateProfile(auth.currentUser, { displayName: displayName })
-    const userDoc = doc(firestore, "users", auth.currentUser.uid)
+    const userDoc = doc(firestore, "users", auth.currentUser.displayName)
     await setDoc(userDoc, { displayName: displayName })
 }
 
